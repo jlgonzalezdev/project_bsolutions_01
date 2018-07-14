@@ -14,33 +14,23 @@ class App extends Component {
       lstStr: '',
       lists: []
     };
-    // this.addList = this.addList.bind(this);
-    this.setLstStr = this.setLstStr.bind(this);
-
+    
   }
 
-  componentDidMount(){
-    TaskService.getAll().then((response)=>{
+  componentDidMount() {
+    TaskService.getAll().then((response) => {
       var items = response.data.tasks
-      this.setState({lists:[{
-        key: 'lst01', name: 'Todo List',
-        items: items
-      }]});
+      if(!items)
+        items = [];
+      this.setState({
+        lists: [{
+          key: 'lst01', name: 'Todo List',
+          items: items
+        }]
+      });
     });
   }
-
-  // addList(e) {
-  //   if (this.state.lstStr !== '' && this.state.lstStr !== null) {
-  //     var newLst = { key: Date.now() + this.state.lstStr, name: this.state.lstStr, items: [] };
-  //     this.setState((prev) => { return { lstStr: '', lists: prev.lists.concat(newLst) } });
-  //     this.lstInput.value = '';
-  //   }
-  //   e.preventDefault();
-  // }
-
-  setLstStr() {
-    this.setState({ lstStr: this.lstInput.value });
-  }
+  
 
   render() {
     var listsJSX = this.state.lists.map((lst) => {
@@ -53,17 +43,8 @@ class App extends Component {
           <h1 className="App-title">BSolutions Todo List</h1>
         </header>
         <div className="row">
+         <h3  style={{display:listsJSX.length>0?'none':'block',textAlign:'center',width:'100%'}}>Loading List...</h3>
           {listsJSX}
-          <div className="col-3">
-            <div className="card list" style={{ position: 'absolute' }}>
-              <div className="card-body" style={{ padding: 1 }}>
-                {/* <form onSubmit={this.addList}>
-                  <input type="text" ref={(ref) => { this.lstInput = ref }} onChange={this.setLstStr} placeholder="Ingresa lista..."></input>
-                  <button className={this.state.lstStr !== '' && this.state.lstStr !== undefined ? 'btnCustom bgBlue' : 'btnCustom bgGray'} type="submit">Add</button>
-                </form> */}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     );

@@ -1,29 +1,28 @@
 
 import axios from 'axios'
-var server= 'http://localhost:3002';
-   
+
 var TaskService = {
     getAll: () => {
-        var url = server + '/tasks/all';
+        var url = '/tasks/all';
         return axios.get(url).then((response) => {
             return response;
         });
     },
-    insert:(item)=>{
-        var url = server + '/tasks/insert';
-        return axios.post(url,item).then((response) => {
+    insert: (item) => {
+        var url =  '/tasks/insert';
+        return axios.post(url, item).then((response) => {
             return response;
         });
     },
-    delete:(item)=>{
-        var url = server + '/tasks/delete';
-        return axios.post(url,item).then((response) => {
+    delete: (item) => {
+        var url =  '/tasks/delete/' +item._id ;
+        return axios.delete(url).then((response) => {
             return response;
         });
     },
-    update:(item)=>{
-        var url = server + '/tasks/update';
-        return axios.post(url,item).then((response) => {
+    update: (item) => {
+        var url =  '/tasks/update';
+        return axios.put(url, item).then((response) => {
             return response;
         });
     }
