@@ -4,6 +4,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.css'
 import { TodoList } from './componets/TodoList/TodoList'
+import TaskService from "./services/taskService";
 class App extends Component {
 
   constructor(props) {
@@ -11,25 +12,31 @@ class App extends Component {
     this.lstInput = {};
     this.state = {
       lstStr: '',
-      lists: [{
-        key: 'lst01', name: 'Mis Pendientes',
-        items: [{ key: '01', taskStr: 'tarea 01',isDone:false },
-        { key: '02', taskStr: 'tarea 02',isDone:false }]
-      }]
+      lists: []
     };
-    this.addList = this.addList.bind(this);
+    // this.addList = this.addList.bind(this);
     this.setLstStr = this.setLstStr.bind(this);
 
   }
 
-  addList(e) {
-    if (this.state.lstStr !== '' && this.state.lstStr !== null) {
-      var newLst = { key: Date.now() + this.state.lstStr, name: this.state.lstStr, items: [] };
-      this.setState((prev) => { return { lstStr: '', lists: prev.lists.concat(newLst) } });
-      this.lstInput.value = '';
-    }
-    e.preventDefault();
+  componentDidMount(){
+    TaskService.getAll().then((response)=>{
+      var items = response.data.tasks
+      this.setState({lists:[{
+        key: 'lst01', name: 'Todo List',
+        items: items
+      }]});
+    });
   }
+
+  // addList(e) {
+  //   if (this.state.lstStr !== '' && this.state.lstStr !== null) {
+  //     var newLst = { key: Date.now() + this.state.lstStr, name: this.state.lstStr, items: [] };
+  //     this.setState((prev) => { return { lstStr: '', lists: prev.lists.concat(newLst) } });
+  //     this.lstInput.value = '';
+  //   }
+  //   e.preventDefault();
+  // }
 
   setLstStr() {
     this.setState({ lstStr: this.lstInput.value });
@@ -50,10 +57,10 @@ class App extends Component {
           <div className="col-3">
             <div className="card list" style={{ position: 'absolute' }}>
               <div className="card-body" style={{ padding: 1 }}>
-                <form onSubmit={this.addList}>
+                {/* <form onSubmit={this.addList}>
                   <input type="text" ref={(ref) => { this.lstInput = ref }} onChange={this.setLstStr} placeholder="Ingresa lista..."></input>
                   <button className={this.state.lstStr !== '' && this.state.lstStr !== undefined ? 'btnCustom bgBlue' : 'btnCustom bgGray'} type="submit">Add</button>
-                </form>
+                </form> */}
               </div>
             </div>
           </div>

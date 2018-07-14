@@ -9,7 +9,7 @@ export default class TodoItems extends React.Component {
     render() {
        var itemsProp =this.props.items;
        var itemsJSX = itemsProp.map((item)=>{
-           return <Item key={item.key} item={item} deleteItem={this.props.deleteItem} updateItem={this.props.updateItem}></Item>
+           return <Item key={item._id} item={item} deleteItem={this.props.deleteItem} updateItem={this.props.updateItem}></Item>
        });
        return (<div>
             <FlipMove duration={250} easing="ease-out">

@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './TodoList.css';
 import TodoItems from '../TodoItems/TodoItems'
+import TaskService from "../../services/taskService";
 
 export class TodoList extends React.Component {
 
@@ -19,11 +20,18 @@ export class TodoList extends React.Component {
         if (this.state.taskStr !== '' && this.state.taskStr !== undefined) {
             var item = {
                 taskStr: this.state.taskStr,
-                key: Date.now() + this.state.taskStr
+                itemText:this.state.taskStr,
+                key: Date.now() + this.state.taskStr,
+                isDone:false
             };
-            this.setState((prev => {
-                return { items: prev.items.concat(item), taskStr: '' };
-            }),()=>{console.log(this.state.items)});
+            TaskService.insert(item).then((response)=>{
+                item = response.data.task;
+                this.setState((prev => {
+                    return { items: prev.items.concat(item), taskStr: '' };
+                }),()=>{console.log(this.state.items)
+                
+            });                
+            });
         }
         this.taskInput.focus();
         e.preventDefault();
@@ -31,16 +39,20 @@ export class TodoList extends React.Component {
 
     deleteItem(item){
         var filtered =this.state.items.filter((aux)=>{
-            return aux.key !== item.key;
+            return aux._id !== item._id;
         });
-        this.setState({items: filtered});
+        this.setState({items: filtered},()=>{
+            TaskService.delete(item);
+        });
         this.taskInput.focus();
         //actualizamos a backend
     }
 
     updateItem(item,value,isDone){
-        alert('updating ' + value + ' ' + isDone);
         //actualizamos a backend
+        item.taskStr = value;
+        item.isDone = isDone;
+        TaskService.update(item);
     }
 
     setTaskStr(evt) {
